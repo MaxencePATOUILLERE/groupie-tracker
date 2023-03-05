@@ -8,9 +8,9 @@ import (
 	"strconv"
 )
 
-var PORT = 8080
+var PORT = 3001
 
-type Artists struct {
+type Artists []struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
 	Name         string   `json:"name"`
@@ -21,16 +21,51 @@ type Artists struct {
 	ConcertDates string   `json:"concertDates"`
 	Relations    string   `json:"relations"`
 }
+type Locations struct {
+	Index []struct {
+		ID        int      `json:"id"`
+		Locations []string `json:"locations"`
+		Dates     string   `json:"dates"`
+	} `json:"index"`
+}
+type Dates struct {
+	Index []struct {
+		ID    int      `json:"id"`
+		Dates []string `json:"dates"`
+	} `json:"index"`
+}
 
-func getArtist(id int) Artists {
+func getArtist() Artists {
 	var artist Artists
-	response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists/" + strconv.Itoa(id))
+	response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
 	if err != nil {
 		// Gérer l'erreur
 	}
 	defer response.Body.Close()
 	err = json.NewDecoder(response.Body).Decode(&artist)
 	return artist
+}
+
+func getLocation() Locations {
+	var location Locations
+	response, err := http.Get("https://groupietrackers.herokuapp.com/api/locations")
+	if err != nil {
+		// Gérer l'erreur
+	}
+	defer response.Body.Close()
+	err = json.NewDecoder(response.Body).Decode(&location)
+	return location
+}
+
+func getDate() Dates {
+	var date Dates
+	response, err := http.Get("https://groupietrackers.herokuapp.com/api/dates")
+	if err != nil {
+		// Gérer l'erreur
+	}
+	defer response.Body.Close()
+	err = json.NewDecoder(response.Body).Decode(&date)
+	return date
 }
 
 func htmlArtistName(members []string) string {
@@ -47,60 +82,29 @@ func htmlArtistName(members []string) string {
 	return htmlmembers
 }
 
-type Locations struct {
-	ID        int      `json:"id"`
-	Locations []string `json:"locations"`
-	Dates     string   `json:"dates"`
-}
-
-func getLocation(id int) Locations {
-	var location Locations
-	response, err := http.Get("https://groupietrackers.herokuapp.com/api/locations/" + strconv.Itoa(id))
-	if err != nil {
-		// Gérer l'erreur
-	}
-	defer response.Body.Close()
-	err = json.NewDecoder(response.Body).Decode(&location)
-	return location
-}
-
-type Dates struct {
-	ID    int      `json:"id"`
-	Dates []string `json:"dates"`
-}
-
-func getDate(id int) Dates {
-	var date Dates
-	response, err := http.Get("https://groupietrackers.herokuapp.com/api/dates/" + strconv.Itoa(id))
-	if err != nil {
-		// Gérer l'erreur
-	}
-	defer response.Body.Close()
-	err = json.NewDecoder(response.Body).Decode(&date)
-	return date
-}
-
 func htmlConvert(band Artists, location Locations, date Dates) string {
 	var html string
-	html += "<div class=\"card\">\n<div class=\"card__inner\">\n <div class=\"card__face card__face--front\">\n <img src=\""
-	html += band.Image
-	html += "\" class=\"bandImage\">\n <h2 class=\"BandName\">"
-	html += band.Name
-	html += "</h2>\n </div>\n <div class=\"card__face card__face--back\">\n <div class=\"card__content\">\n <div class=\"card__header\">\n <img src=\""
-	html += band.Image
-	html += "\" alt=\"\" class=\"pp\" />\n <h2>"
-	html += band.Name
-	html += "</h2>\n </div>\n <div class=\"card__body\">"
-	html += htmlArtistName(band.Members)
-	html += "<p>Creation : " + strconv.Itoa(band.CreationDate) + "</p>"
-	html += "<p>First Album : " + band.FirstAlbum + "</p>"
-	html += "<p class=\"moreInfo\" onclick=\"popup();\">... More info</p>" + "<div class=\"locationDate\">"
-	for i := 0; i < len(location.Locations); i++ {
-		html += "<p class=\"locationDate" + strconv.Itoa(i) + "\">"
-		html += htmlConvertLocation(location.Locations[i])
-		html += htmlConvertDate(date.Dates[i])
+	for u, v := range band {
+		html += "<div class=\"card\">\n<div class=\"card__inner\">\n <div class=\"card__face card__face--front\">\n <img src=\""
+		html += v.Image
+		html += "\" class=\"bandImage\">\n <h2 class=\"BandName\">"
+		html += v.Name
+		html += "</h2>\n </div>\n <div class=\"card__face card__face--back\">\n <div class=\"card__content\">\n <div class=\"card__header\">\n <img src=\""
+		html += v.Image
+		html += "\" alt=\"\" class=\"pp\" />\n <h2>"
+		html += v.Name
+		html += "</h2>\n </div>\n <div class=\"card__body\">"
+		html += htmlArtistName(v.Members)
+		html += "<p>Creation : " + strconv.Itoa(v.CreationDate) + "</p>"
+		html += "<p>First Album : " + v.FirstAlbum + "</p>"
+		html += "<p class=\"moreInfo\" onclick=\"popup();\">... More info</p>" + "<div class=\"locationDate\">"
+		for i, _ := range location.Index[u].Locations {
+			html += "<p class=\"locationDate" + strconv.Itoa(u) + "\">"
+			html += htmlConvertLocation(location.Index[u].Locations[i])
+			html += htmlConvertDate(date.Index[u].Dates[i])
+		}
+		html += "\n </div>\n </div>\n </div>\n </div>\n </div>\n </div>"
 	}
-	html += "\n </div>\n </div>\n </div>\n </div>\n </div>\n </div>"
 	return html
 }
 
@@ -118,28 +122,29 @@ func htmlConvertDate(date string) string {
 
 func htmlSearchBar(band Artists, location Locations) string {
 	var search string
-	search += "<li><a>" + band.Name + "</a></li>"
-	for _, v := range band.Members {
-		search += "<li><a>" + v + "</a></li>"
-	}
-	search += "<li><a>" + strconv.Itoa(band.CreationDate) + "</a></li>"
-	search += "<li><a>" + band.FirstAlbum + "</a></li>"
-	for _, v := range location.Locations {
-		search += "<li><a>" + v + "</a></li>"
+	for u, v := range band {
+		search += "<li><a>" + v.Name + "</a></li>"
+		for _, j := range v.Members {
+			search += "<li><a>" + j + "</a></li>"
+		}
+		search += "<li><a>" + strconv.Itoa(v.CreationDate) + "</a></li>"
+		search += "<li><a>" + v.FirstAlbum + "</a></li>"
+		for _, y := range location.Index[u].Locations {
+			search += "<li><a>" + y + "</a></li>"
+		}
 	}
 	return search
 }
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
 	var body, searchBar string
+	artists := getArtist()
+	locations := getLocation()
+
+	body += htmlConvert(artists, locations, getDate())
+
 	searchBar += "<ul id=\"myUL\">"
-	for i := 1; i <= 52; i++ {
-		artistButter := getArtist(i)
-		locationButter := getLocation(i)
-		dateButter := getDate(i)
-		body += htmlConvert(artistButter, locationButter, dateButter)
-		searchBar += htmlSearchBar(artistButter, locationButter)
-	}
+	searchBar += htmlSearchBar(artists, locations)
 	searchBar += "</ul>"
 	t, _ := template.ParseFiles("./data/home.html")
 	t.Execute(w, map[string]template.HTML{"Body": template.HTML(body), "searchBar": template.HTML(searchBar)})
