@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Groupie-Tracker</title>
+    <link rel="stylesheet" type="text/css" href="data/home.css" />
+
+</head>
+<body>
+<div class="topHeader">
+    <a class="one">Groupie Tracker</a>
+    <div class="searchBar">
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+        {{ .searchBar }}
+    </div>
+</div>
+
+<div class="cardFlex">
+    {{ .Body }}
+</div>
+
+<script src="/data/home.js"></script>
+</body>
+</html>
