@@ -9,10 +9,15 @@
 <body>
 <div class="topHeader">
     <a class="one">Groupie Tracker</a>
-    <div class="searchBar">
-    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
-        {{ .searchBar }}
+
+    <div class="searchBox">
+    <input type="text" class="searchInput" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+        <img class="iMgn" src="data/Images/Magnifying_glass_icon.png">
     </div>
+</div>
+
+<div  class="suggestion">
+    {{ .searchBar }}
 </div>
 
 <div class="cardFlex">

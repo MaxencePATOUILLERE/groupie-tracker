@@ -11,6 +11,7 @@
 }
 
 body {
+    background-color: #47464d;
     font-family: montserrat, sans-serif;
     width: 100%;
     min-height: 100vh;
@@ -49,7 +50,7 @@ body {
 }
 
 .card__face--front {
-    background-color: #DF7116;
+    background-color: #df7116;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -83,7 +84,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #DF7116;
+    background-color: #df7116;
     z-index: -1;
     border-radius: 0px 0px 50% 0px;
 }
@@ -125,18 +126,24 @@ body {
 }
 
 .topHeader {
+    display: flex;
+    align-items: center;
+    align-content: center;
     background-color: black;
     width: 100%;
-    padding: 14px 17px;
+    padding: 10px 17px;
     position: fixed;
     z-index: 10;
 }
 
-.topHeader a.one {
+.one {
     background-color: #df7116;
     color: white;
     border-radius: 100px;
-    padding: 7px 17px;
+    padding: 10px 17px;
+}
+.bandImage {
+    border-radius: 150px;
 }
 .BandName {
     position: absolute;
@@ -162,35 +169,62 @@ body {
 }
 
 
-#myInput {
-    background-position: 10px 12px; /* Position the search icon */
-    background-repeat: no-repeat; /* Do not repeat the icon image */
-    font-size: 16px; /* Increase font-size */
-    padding: 12px 20px 12px 40px; /* Add some padding */
-    border: 1px solid #ddd; /* Add a grey border */
-    margin-bottom: 12px; /* Add some space below the input */
-}
-
 #myUL {
     /* Remove default list styling */
+    position: static;
     list-style-type: none;
     padding: 0;
     margin: 0;
-    z-index: 10;
+
 }
 #myUL li {
     display: none;
 }
-#myUL li a {
-    border: 1px solid #ddd; /* Add a border to all links */
-    margin-top: -1px; /* Prevent double borders */
-    background-color: #f6f6f6; /* Grey background color */
-    padding: 12px; /* Add some padding */
-    text-decoration: none; /* Remove default text underline */
-    font-size: 18px; /* Increase the font-size */
-    color: black; /* Add a black text color */
-}
 
 #myUL li a:hover:not(.header) {
-    background-color: #eee; /* Add a hover effect to all links, except for headers */
+}
+
+.searchBox {
+   margin-left: 20px;
+    background: #df7116;
+    border-radius: 40px;
+    z-index: 10;
+}
+
+.searchInput {
+    border:none;
+    color: white;
+    background: none;
+    outline:none;
+    float:right;
+    padding: 0;
+    font-size: 16px;
+    transition: 0.4s;
+    line-height: 40px;
+    width: 0px;
+
+}
+@media screen and (max-width: 620px) {
+    .searchBox:hover > .searchInput {
+        width: 150px;
+        padding: 0 6px;
+    }
+}
+
+.searchBox:hover > .searchInput {
+    width: 240px;
+    padding: 0 6px;
+}
+.iMgn {
+    float: left;
+    scale: 0.5;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.4s;
+}
+.suggestion {
+
 }
