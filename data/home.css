@@ -5,6 +5,32 @@
     --light: #F3F3F3;
 }
 
+
+#map{
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    height: 400px;
+    width: 30%;
+    z-index: 10000;
+    position: fixed !important;
+}
+
+#close-map-button {
+    border: none;
+    display: none;
+    top: 30%;
+    left: 35.4%;
+    transform: translate(-50%, -50%);
+    z-index: 10001;
+    position: fixed;
+}
+
+#close-map-button:hover{
+    cursor: pointer;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -152,13 +178,9 @@ body {
     display: none;
 }
 
-.map {
-    height: 400px;
-    width: 100%;
-}
 
 .moreInfo {
-    z-index: 5;
+    z-index: 10;
 }
 
 

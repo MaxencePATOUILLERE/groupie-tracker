@@ -1,9 +1,9 @@
 const cards = document.querySelectorAll(".card__inner");
 
+
 for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
-    card.addEventListener("click", () =>
-    {
+    card.addEventListener("click", () => {
         card.classList.toggle("is-flipped");
 
     });
@@ -31,8 +31,28 @@ function myFunction() {
         } else if (txtValue.toUpperCase().indexOf(filter) > -1) {
             console.log("test")
             li[i].style.display = "block";
-        }else {
+        } else {
             li[i].style.display = "none";
-            }
+        }
     }
+}
+
+
+
+function showMap(){
+    var mapContainer = document.querySelector('#map');
+    mapContainer.style.display = 'block';
+    var btnContainer = document.querySelector('#close-map-button');
+    btnContainer.style.display = 'block';
+    console.log("work")
+}
+
+var closeMapButton = document.getElementById('close-map-button');
+closeMapButton.addEventListener('click', closeMap);
+
+function closeMap() {
+    var mapContainer = document.querySelector('#map');
+    mapContainer.style.display = 'none';
+    var btnContainer = document.querySelector('#close-map-button');
+    btnContainer.style.display = 'none';
 }
