@@ -11,14 +11,14 @@
     <a class="one">Groupie Tracker</a>
 
     <div class="searchBox">
-    <input type="text" class="searchInput" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+        <input type="text" class="searchInput" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
         <img class="iMgn" src="data/Images/Magnifying_glass_icon.png">
+        <div  class="suggestion">
+            {{ .searchBar }}
+        </div>
     </div>
 </div>
 
-<div  class="suggestion">
-    {{ .searchBar }}
-</div>
 
 <div class="cardFlex">
     {{ .Body }}

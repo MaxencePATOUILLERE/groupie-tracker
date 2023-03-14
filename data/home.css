@@ -185,7 +185,7 @@ body {
 }
 
 .searchBox {
-   margin-left: 20px;
+    margin-left: 20px;
     background: #df7116;
     border-radius: 40px;
     z-index: 10;
@@ -225,6 +225,12 @@ body {
     align-items: center;
     transition: 0.4s;
 }
-.suggestion {
-
+.searchBox .suggestion {
+    position: absolute;
+    top: 85%;
+    width: 240px;
+    background-color: #d57a2e;
+    color: white;
+    border-radius: 10px;
+    margin-left: 2.5%;
 }
