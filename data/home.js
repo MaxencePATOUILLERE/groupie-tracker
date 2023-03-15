@@ -1,18 +1,14 @@
 const cards = document.querySelectorAll(".card__inner");
-
-
 for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
-    card.addEventListener("click", () => {
+    card.addEventListener("click", () =>
+    {
         card.classList.toggle("is-flipped");
-
     });
 }
-
 function popup() {
     document.getElementsByClassName("locationDate").display = "block";
 }
-
 function myFunction() {
     // Declare variables
     var input, filter, ul, li, a, i, txtValue;
@@ -25,26 +21,15 @@ function myFunction() {
     for (i = 0; i < li.length; i++) {
         a = li[i].getElementsByTagName("a")[0];
         txtValue = a.textContent || a.innerText;
-
         if (filter === "") {
             li[i].style.display = "none";
         } else if (txtValue.toUpperCase().indexOf(filter) > -1) {
             console.log("test")
             li[i].style.display = "block";
-        } else {
+        }else {
             li[i].style.display = "none";
         }
     }
-}
-
-
-
-function showMap(){
-    var mapContainer = document.querySelector('#map');
-    mapContainer.style.display = 'block';
-    var btnContainer = document.querySelector('#close-map-button');
-    btnContainer.style.display = 'block';
-    console.log("work")
 }
 
 var closeMapButton = document.getElementById('close-map-button');

@@ -6,49 +6,85 @@
     <link rel="stylesheet" type="text/css" href="data/home.css" />
 </head>
 <body>
-
 <div class="topHeader">
     <a class="one">Groupie Tracker</a>
-    <div class="searchBar">
-    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
-        {{ .searchBar }}
+    <div class="searchBox">
+        <input type="text" class="searchInput" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+        <img class="iMgn" src="data/Images/Magnifying_glass_icon.png">
+        <div  class="suggestion">
+            {{ .searchBar }}
+        </div>
     </div>
 </div>
+
 <div class="maps" >
     <div id="map"></div>
     <button id="close-map-button">x</button>
     <script>
+        var map;
+        var markers = [];
         function initMap() {
             var options = {
                 zoom: 8,
                 center: { lat: 42.3601, lng: -71.0589 },
             };
-            var map = new google.maps.Map(document.getElementById("map"), options);
+            map = new google.maps.Map(document.getElementById("map"), options);
+        }
+        function showMarkers(id) {
+            // Supprimer tous les anciens marqueurs
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = [];
 
-            // appel à la fonction showMarkers en passant la carte comme argument
-            showMarkers(map);
-        }
-        function showMarkers(map) {
-            // appel à la fonction calculateLongLat pour obtenir les coordonnées géographiques de New York
-            calculateLongLat("New York", function (latLng) {
-                // ajout du marqueur sur la carte
-                var marker = new google.maps.Marker({
-                    position: latLng,
-                    map: map,
-                    title: "New York",
+            // Ajouter de nouveaux marqueurs
+            var locationDiv = document.querySelector('[data-id="' + id + '"]');
+            var locationPars = locationDiv.getElementsByTagName('p');
+            for (var i = 0; i < locationPars.length; i++) {
+                var locationText = locationPars[i].textContent;
+                var locationSplit = locationText.split(', Date: ');
+                var location = locationSplit[0].split(': ')[1].trim();
+                var date = locationSplit[1].trim();
+                calculateLongLat(location, function(latLng) {
+                    if (map instanceof google.maps.Map) { // Vérifier si map est une instance de google.maps.Map
+                        var marker = new google.maps.Marker({
+                            position: latLng,
+                            map: map,
+                            title: location,
+                        });
+                        marker.addListener('click', function() {
+                            var infoWindow = new google.maps.InfoWindow({
+                                content: date
+                            });
+                            infoWindow.open(map, marker);
+                        });
+                        markers.push(marker);
+                    }
                 });
-            });
+            }
+            showMap();
         }
+
         function calculateLongLat(location, callback) {
-            // utilisation de l'API de géocodage de Google Maps pour obtenir les coordonnées géographiques de la ville
             var geocoder = new google.maps.Geocoder();
             var latLng = { lat: 0, lng: 0 };
-            geocoder.geocode({ address: location }, function (results, status) {
+            // remplace les tirets par des espaces dans la chaîne de caractères location
+            location = location.replace(/-/g, ' ');
+            console.log(location)
+            geocoder.geocode({ address: location }, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     latLng = results[0].geometry.location;
                     callback(latLng);
                 }
             });
+        }
+
+        function showMap() {
+            var mapContainer = document.querySelector("#map");
+            mapContainer.style.display = "block";
+            var btnContainer = document.querySelector("#close-map-button");
+            btnContainer.style.display = "block";
+            console.log("work");
         }
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpNqnmbKtHzwzdpUN5-koH8ZfDHtZHV5s&callback=initMap"></script>

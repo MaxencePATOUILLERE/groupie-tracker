@@ -45,7 +45,6 @@ func getArtist() Artists {
 	err = json.NewDecoder(response.Body).Decode(&artist)
 	return artist
 }
-
 func getLocation() Locations {
 	var location Locations
 	response, err := http.Get("https://groupietrackers.herokuapp.com/api/locations")
@@ -56,7 +55,6 @@ func getLocation() Locations {
 	err = json.NewDecoder(response.Body).Decode(&location)
 	return location
 }
-
 func getDate() Dates {
 	var date Dates
 	response, err := http.Get("https://groupietrackers.herokuapp.com/api/dates")
@@ -67,7 +65,6 @@ func getDate() Dates {
 	err = json.NewDecoder(response.Body).Decode(&date)
 	return date
 }
-
 func htmlArtistName(members []string) string {
 	var htmlmembers string
 	htmlmembers += "<p>Members : "
@@ -97,7 +94,7 @@ func htmlConvert(band Artists, location Locations, date Dates) string {
 		html += htmlArtistName(v.Members)
 		html += "<p>Creation : " + strconv.Itoa(v.CreationDate) + "</p>"
 		html += "<p>First Album : " + v.FirstAlbum + "</p>"
-		html += "<p class=\"moreInfo\" onclick=\"showMap();\">... More info</p>" + "<div class=\"locationDate\">"
+		html += "<p class=\"moreInfo\" onclick=\"showMarkers( " + strconv.Itoa(v.ID) + ", this.parentNode);\">... More info</p>" + "<div class=\"locationDate\" data-id=\"" + strconv.Itoa(v.ID) + "\">"
 		for i, _ := range location.Index[u].Locations {
 			html += "<p class=\"locationDate" + strconv.Itoa(u) + "\">"
 			html += htmlConvertLocation(location.Index[u].Locations[i])
@@ -113,13 +110,11 @@ func htmlConvertLocation(location string) string {
 	htmlLocation += "Location: " + location + ", "
 	return htmlLocation
 }
-
 func htmlConvertDate(date string) string {
 	var htmlDate string
 	htmlDate += "Date: " + date + "</p>"
 	return htmlDate
 }
-
 func htmlSearchBar(band Artists, location Locations) string {
 	var search string
 	for u, v := range band {
@@ -140,9 +135,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	var body, searchBar string
 	artists := getArtist()
 	locations := getLocation()
-
 	body += htmlConvert(artists, locations, getDate())
-
 	searchBar += "<ul id=\"myUL\">"
 	searchBar += htmlSearchBar(artists, locations)
 	searchBar += "</ul>"
@@ -154,7 +147,7 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./data/"))
 	http.Handle("/data/", http.StripPrefix("/data/", fileServer))
 	http.HandleFunc("/", HomePage)
-	fmt.Println("Server on : localhost:3001")
+	fmt.Println("Server on : localhost:8080")
 	err := http.ListenAndServe(":"+strconv.Itoa(PORT), nil)
 	if err != nil {
 		return
