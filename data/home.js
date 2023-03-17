@@ -69,3 +69,20 @@ check.getElementsByClassName('carrer')[0].onclick = function() {
     else
         check.classList.add('visibility');
 }
+
+// Save input text when it's refresh
+const inputField = document.getElementById('myInput');
+
+
+    // Load the stored value from localStorage when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        const storedValue = localStorage.getItem('inputValue');
+        if (storedValue) {
+            inputField.value = storedValue;
+        }
+    });
+
+// Save the current value to localStorage when the input value changes
+    inputField.addEventListener('input', () => {
+        localStorage.setItem('inputValue', inputField.value);
+    });
