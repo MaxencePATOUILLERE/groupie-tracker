@@ -98,7 +98,7 @@ func htmlConvert(band Artists, location Locations, date Dates) string {
 		html += htmlArtistName(v.Members)
 		html += "<p>Creation : " + strconv.Itoa(v.CreationDate) + "</p>"
 		html += "<p>First Album : " + v.FirstAlbum + "</p>"
-		html += "<p class=\"moreInfo\" onclick=\"popup();\">... More info</p>" + "<div class=\"locationDate\">"
+		html += "<p class=\"moreInfo\" onclick=\"showMarkers( " + strconv.Itoa(v.ID) + ", this.parentNode);\">... More info</p>" + "<div class=\"locationDate\" data-id=\"" + strconv.Itoa(v.ID) + "\">"
 		for i, _ := range location.Index[u].Locations {
 			html += "<p class=\"locationDate" + strconv.Itoa(u) + "\">"
 			html += htmlConvertLocation(location.Index[u].Locations[i])

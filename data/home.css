@@ -304,3 +304,70 @@ body {
     font-family: initial;
 
 }
+
+#map {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    display: none;
+    height: 600px;
+    width: 60%;
+    z-index: 10000;
+    position: fixed !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 2s, visibility 2s, transform 1s;
+}
+
+#close-map-button {
+    border: none;
+    display: none;
+    bottom: calc(50% - 320px);
+    left: calc(50% - 29%);
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 10001;
+    position: fixed;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 2s, visibility 2s, transform 2s;
+    background-color: #fff;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 4px;
+    color: #000;
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#close-map-button:hover{
+    cursor: pointer;
+}
+
+.map-container {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.map-container.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.btn-container {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.btn-container.visible {
+    opacity: 1;
+    visibility: visible;
+}
+.map {
+    height: 400px;
+    width: 100%;
+}

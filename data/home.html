@@ -35,7 +35,7 @@
     </div>
 
     <div class="searchBox">
-        <input type="text" class="searchInput" onkeyup="myFunction();" id="myInput" placeholder="Search..">
+        <input type="text" class="searchInput" onclick="getSavedValue();" onkeyup="myFunction();" id="myInput" placeholder="Search..">
         <img class="iMgn" onclick="sendForm();" src="data/Images/Magnifying_glass_icon.png">
 
         <div  class="suggestion">
@@ -45,6 +45,11 @@
 
 </div>
 
+<div class="maps">
+    <div id="map"></div>
+    <button id="close-map-button">x</button>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpNqnmbKtHzwzdpUN5-koH8ZfDHtZHV5s&callback=initMap"></script>
+</div>
 
 <div class="cardFlex">
     {{ .Body }}
