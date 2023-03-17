@@ -179,7 +179,6 @@ globalLoop:
 
 		sugestions += search
 	}
-	fmt.Println(sugestions)
 	return sugestions
 }
 
@@ -246,7 +245,6 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		countrySelect = r.FormValue("country")
 		nbMembers = r.FormValue("nbMembers")
 		startYear = r.FormValue("startYear")
-		fmt.Println(input, countrySelect, nbMembers, startYear)
 		searchBar = "<ul id=\"myUL\">" + htmlSearchBar(artists, locations, input, countrySelect, nbMembers, startYear) + "</ul>"
 	}
 
