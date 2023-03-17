@@ -9,14 +9,40 @@
 <body>
 <div class="topHeader">
     <a class="one">Groupie Tracker</a>
+    <div class="dropDown">
+        <select class="form-select" id="filterByColor">
+            <option value="" selected>County : </option>
+            {{ .dropDownOptions }}
+        </select>
+    </div>
+
+    <div id="list1" class="dropdown-check-list">
+        <span class="anchor">Members : </span>
+        <ul class="items">
+            <li><input type="checkbox" name="members" value="1" >1 </li>
+            <li><input type="checkbox" name="members" value="2" >2 </li>
+            <li><input type="checkbox" name="members" value="3" >3 </li>
+            <li><input type="checkbox" name="members" value="4" >4 </li>
+            <li><input type="checkbox" name="members" value="5" >5 </li>
+            <li><input type="checkbox" name="members" value="6" >6 </li>
+            <li><input type="checkbox" name="members" value="7" >7 </li>
+        </ul>
+    </div>
+
+    <div id="carrerStart" class="carrerStart">
+        <label for="inputRange" class="carrer"> Carrer start year : </label>
+        <input id="inputRange" class="range" type="range" name="carrerRange" min="1950" max="2023">
+    </div>
 
     <div class="searchBox">
-        <input type="text" class="searchInput" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
-        <img class="iMgn" src="data/Images/Magnifying_glass_icon.png">
+        <input type="text" class="searchInput" onkeyup="myFunction();" id="myInput" placeholder="Search..">
+        <img class="iMgn" onclick="sendForm();" src="data/Images/Magnifying_glass_icon.png">
+
         <div  class="suggestion">
             {{ .searchBar }}
         </div>
     </div>
+
 </div>
 
 

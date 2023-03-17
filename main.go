@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 var PORT = 3001
@@ -120,34 +121,135 @@ func htmlConvertDate(date string) string {
 	return htmlDate
 }
 
-func htmlSearchBar(band Artists, location Locations) string {
+func htmlSearchBar(band Artists, location Locations, input string, countrySelect string, nbMembers string, startYear string) string {
 	var search string
+	var sugestions string
+globalLoop:
 	for u, v := range band {
-		search += "<li><a>" + v.Name + "</a></li>"
-		for _, j := range v.Members {
-			search += "<li><a>" + j + "</a></li>"
+		search = ""
+		for a, b := range nbMembers {
+			buffer, _ := strconv.Atoi(string(b))
+			if a == len(nbMembers)-1 && buffer != len(v.Members) {
+				continue globalLoop
+			} else if buffer == len(v.Members) {
+				for _, j := range v.Members {
+					search += "<li><a>" + j + "</a></li>"
+				}
+				break
+			} else if buffer != len(v.Members) {
+				continue
+			}
 		}
-		search += "<li><a>" + strconv.Itoa(v.CreationDate) + "</a></li>"
-		search += "<li><a>" + v.FirstAlbum + "</a></li>"
-		for _, y := range location.Index[u].Locations {
-			search += "<li><a>" + y + "</a></li>"
+		countryFound := false
+		if countrySelect != "" {
+			for concertIndex, concertLocation := range location.Index[u].Locations {
+				for position, char := range concertLocation {
+					if char == '-' && strings.Compare(concertLocation[position+1:], countrySelect) == 0 {
+						search += "<li><a>" + concertLocation + " - " + v.Name + "</a></li>"
+						countryFound = true
+					} else if !countryFound && concertIndex == len(concertLocation)-1 {
+						continue globalLoop
+					}
+				}
+			}
 		}
+
+		secondHyphen := false
+		for albumDateIndex, albumValue := range v.FirstAlbum {
+			if secondHyphen && albumValue == '-' {
+				secondHyphen = true
+				buffer, _ := strconv.Atoi(v.FirstAlbum[albumDateIndex+1:])
+				fmt.Println("buffer : ", buffer)
+				secBuffer, _ := strconv.Atoi(startYear)
+				if buffer >= secBuffer {
+					search += "<li><a>" + v.FirstAlbum + " - " + v.Name + "</a></li>"
+				} else {
+					continue globalLoop
+				}
+			}
+		}
+		buffer, _ := strconv.Atoi(startYear)
+		if v.CreationDate >= buffer {
+			search += "<li><a>" + strconv.Itoa(v.CreationDate) + " - " + v.Name + "</a></li>"
+		} else {
+			continue globalLoop
+		}
+
+		search += "<li><a>" + v.Name + " - Artist" + "</a></li>"
+
+		sugestions += search
 	}
-	return search
+	fmt.Println(sugestions)
+	return sugestions
 }
 
+func avoidDouble(input string, country []string) ([]string, bool) {
+	for _, coutryWord := range country {
+		if len(coutryWord) < len(input) {
+			continue
+		} else if len(coutryWord) > len(input) {
+			continue
+		} else {
+			for countryletterIndex, countryLetter := range coutryWord {
+				if string(input[countryletterIndex]) != string(countryLetter) {
+					break
+				} else if len(coutryWord)-1 == countryletterIndex {
+					return country, true
+				}
+			}
+		}
+	}
+	country = append(country, input)
+	return country, false
+}
+
+func htmlDropDown(location Locations) string {
+	var htmlString string
+	var country []string
+	var double bool
+
+	for i := 1; i < 52; i++ {
+		for _, v := range location.Index[i].Locations {
+			for x, y := range v {
+				if y == '-' {
+					country, double = avoidDouble(v[x+1:], country)
+					if !double {
+						htmlString += "<option value=\""
+						htmlString += v[x+1:]
+						htmlString += "\">"
+						htmlString += v[x+1:]
+					}
+				}
+			}
+			htmlString += "</option>"
+		}
+	}
+	return htmlString
+}
+
+var searchBar, dropDownOptions, input, countrySelect, nbMembers, startYear string
+
 func HomePage(w http.ResponseWriter, r *http.Request) {
-	var body, searchBar string
+	var body string
 	artists := getArtist()
 	locations := getLocation()
 
 	body += htmlConvert(artists, locations, getDate())
 
-	searchBar += "<ul id=\"myUL\">"
-	searchBar += htmlSearchBar(artists, locations)
-	searchBar += "</ul>"
-	t, _ := template.ParseFiles("./data/home.html")
-	t.Execute(w, map[string]template.HTML{"Body": template.HTML(body), "searchBar": template.HTML(searchBar)})
+	dropDownOptions = htmlDropDown(locations)
+	if r.Method == http.MethodGet {
+		t, _ := template.ParseFiles("./data/home.html")
+		t.Execute(w, map[string]template.HTML{"Body": template.HTML(body), "searchBar": template.HTML(searchBar), "dropDownOptions": template.HTML(dropDownOptions)})
+		searchBar = ""
+	} else if r.Method == http.MethodPost {
+		input = r.FormValue("input")
+		countrySelect = r.FormValue("country")
+		nbMembers = r.FormValue("nbMembers")
+		startYear = r.FormValue("startYear")
+		fmt.Println(input, countrySelect, nbMembers, startYear)
+		searchBar = "<ul id=\"myUL\">" + htmlSearchBar(artists, locations, input, countrySelect, nbMembers, startYear) + "</ul>"
+	}
+
 }
 
 func main() {

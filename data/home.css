@@ -137,10 +137,11 @@ body {
 }
 
 .one {
+    user-select: none;
     background-color: #df7116;
     color: white;
     border-radius: 100px;
-    padding: 10px 17px;
+    padding: 5px 17px;
 }
 .bandImage {
     border-radius: 150px;
@@ -168,20 +169,11 @@ body {
     z-index: 5;
 }
 
-
 #myUL {
-    /* Remove default list styling */
     position: static;
     list-style-type: none;
     padding: 0;
     margin: 0;
-
-}
-#myUL li {
-    display: none;
-}
-
-#myUL li a:hover:not(.header) {
 }
 
 .searchBox {
@@ -229,8 +221,86 @@ body {
     position: absolute;
     top: 85%;
     width: 240px;
-    background-color: #d57a2e;
+    background-color: #d98a4d;
     color: white;
     border-radius: 10px;
     margin-left: 2.5%;
+}
+.dropdown-check-list {
+    display: inline-block;
+    user-select: none;
+}
+.anchor {
+    border: 10px grey;
+}
+
+.dropdown-check-list .anchor {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px;
+    background-color: #df7116;
+    color: white;
+    border-radius: 20px;
+
+}
+
+.dropdown-check-list ul.items {
+    padding: 2px;
+    display: none;
+    margin-left: 10px;
+    background-color: #d98a4d;
+    color: white;
+    border-radius: 20px;
+    border: 5px #47464d;
+}
+
+.dropdown-check-list ul.items li {
+    list-style: none;
+
+}
+
+.dropdown-check-list.visible .items {
+    position: absolute;
+    display: block;
+
+}
+
+.carrerStart {
+    user-select: none;
+    padding: 5px;
+    background-color: #df7116;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+
+}
+
+.range {
+    position: absolute;
+    display: none;
+    top: 55px;
+}
+
+.carrerStart.visibility .range {
+    position: absolute;
+    display: block;
+    background-color: #ffffff;
+}
+
+.form-select {
+    font-size: initial;
+    outline: none;
+    cursor: pointer;
+    list-style-type: none;
+    background-color: #df7116;
+    color: white;
+    border-radius: 20px;
+    border: #df7116;
+    padding: 4.3px;
+}
+
+.dropDown {
+    font-family: initial;
+
 }

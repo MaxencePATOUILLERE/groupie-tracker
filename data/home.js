@@ -1,5 +1,5 @@
-const cards = document.querySelectorAll(".card__inner");
 
+const cards = document.querySelectorAll(".card__inner");
 for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
     card.addEventListener("click", () =>
@@ -9,10 +9,30 @@ for (let i = 0; i < cards.length; i++) {
     });
 }
 
-function popup() {
-    document.getElementsByClassName("locationDate").display = "block";
-}
+function sendForm() {
+    const XHR = new XMLHttpRequest();
+    const FD = new FormData();
+    var select = document.getElementById('filterByColor');
+    var value = select.options[select.selectedIndex].value;
+    member = document.getElementsByName('members');
+    var checkBox = "";
+    for (var i = 0; i < member.length; i++) {
+        if (member[i].checked) {
+            checkBox += member[i].value
+        }
+    }
+    var startYear = document.getElementById("inputRange").value
 
+    FD.append("input", document.getElementById("myInput").value)
+    FD.append("country", value)
+    FD.append("nbMembers", checkBox)
+    FD.append("startYear", startYear)
+
+    XHR.open('POST',"/")
+    XHR.send(FD)
+
+    location.assign("/")
+}
 function myFunction() {
     // Declare variables
     var input, filter, ul, li, a, i, txtValue;
@@ -26,13 +46,26 @@ function myFunction() {
         a = li[i].getElementsByTagName("a")[0];
         txtValue = a.textContent || a.innerText;
 
-        if (filter === "") {
-            li[i].style.display = "none";
-        } else if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            console.log("test")
-            li[i].style.display = "block";
-        }else {
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
             li[i].style.display = "none";
             }
     }
+}
+
+var checkList = document.getElementById('list1');
+checkList.getElementsByClassName('anchor')[0].onclick = function() {
+    if (checkList.classList.contains('visible'))
+        checkList.classList.remove('visible');
+    else
+        checkList.classList.add('visible');
+}
+var check = document.getElementById('carrerStart');
+check.getElementsByClassName('carrer')[0].onclick = function() {
+
+    if (check.classList.contains('visibility'))
+        check.classList.remove('visibility');
+    else
+        check.classList.add('visibility');
 }
